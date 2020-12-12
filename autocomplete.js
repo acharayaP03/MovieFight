@@ -1,11 +1,7 @@
-import fetchMovie from "./API/fetchAPI";
 import { debounce } from "./Utils/utils";
-
-import { onMovieSelect } from "./domView";
-
-const createAutoComplete = ({ root, renderOptions }) => {
+const createAutoComplete = ({ root, renderOptions, onSelectOption, inputValue, fetchMovie }) => {
   root.innerHTML = `
-        <label><b>Search For A Movie </b></label>
+        <label><b>Search</b></label>
         <input class="input" />
         <div class="dropdown">
             <div class="dropdown-menu">
@@ -20,28 +16,28 @@ const createAutoComplete = ({ root, renderOptions }) => {
   const resultsWrapper = root.querySelector(".results");
 
   const onInput = async (event) => {
-    const movies = await fetchMovie(event.target.value);
+    const items = await fetchMovie(event.target.value);
 
     //if there is no results, dont add is-acitve at all.
     // and retrurn, which will exit the execution of rest of the function.
-    if (!movies.length) {
+    if (!items.length) {
       dropdown.classList.remove("is-active");
       return;
     }
     //this will clear out the html elements below when another search is performed.
     resultsWrapper.innerHTML = "";
     dropdown.classList.add("is-active");
-    for (let movie of movies) {
+    for (let item of items) {
       const options = document.createElement("a");
 
       options.classList.add("dropdown-item");
 
-      options.innerHTML = renderOptions(movie);
+      options.innerHTML = renderOptions(item);
 
       options.addEventListener("click", () => {
         dropdown.classList.remove("is-active");
-        input.value = movie.Title;
-        onMovieSelect(movie);
+        input.value = inputValue(item);
+        onSelectOption(item);
       });
 
       resultsWrapper.appendChild(options);
