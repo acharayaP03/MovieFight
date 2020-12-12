@@ -1919,7 +1919,7 @@ var _axios = _interopRequireDefault(require("axios"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-const onMovieSelect = async movie => {
+const onMovieSelect = async (movie, element) => {
   const response = await _axios.default.get("http://www.omdbapi.com/", {
     params: {
       apiKey: "4fd8b060",
@@ -1927,7 +1927,7 @@ const onMovieSelect = async movie => {
     }
   });
   console.log(response.data);
-  document.querySelector("#target").innerHTML = movieTemplate(response.data);
+  element.innerHTML = movieTemplate(response.data);
 };
 
 exports.onMovieSelect = onMovieSelect;
@@ -2079,9 +2079,7 @@ var _autocomplete = _interopRequireDefault(require("./autocomplete"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-(0, _autocomplete.default)({
-  root: document.querySelector(".autocomplete"),
-
+const autocompleteConfig = {
   renderOptions(movie) {
     return `
         <img src="${movie.Poster === "N/A" ? "" : movie.Poster}" />
@@ -2091,10 +2089,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
   inputValue(item) {
     return item.Title;
-  },
-
-  onSelectOption(item) {
-    return (0, _domView.onMovieSelect)(item);
   },
 
   async fetchMovie(searchTerm) {
@@ -2112,6 +2106,24 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
     return response.data.Search;
   }
 
+};
+(0, _autocomplete.default)({ ...autocompleteConfig,
+
+  onSelectOption(item) {
+    document.querySelector(".tutorial").classList.add("is-hidden");
+    return (0, _domView.onMovieSelect)(item, document.querySelector('#left-summary'));
+  },
+
+  root: document.querySelector("#left-autocomplete")
+});
+(0, _autocomplete.default)({ ...autocompleteConfig,
+
+  onSelectOption(item) {
+    document.querySelector(".tutorial").classList.add("is-hidden");
+    return (0, _domView.onMovieSelect)(item, document.querySelector("#right-summary"));
+  },
+
+  root: document.querySelector("#right-autocomplete")
 });
 },{"axios":"node_modules/axios/index.js","./domView":"domView.js","./autocomplete":"autocomplete.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
@@ -2141,7 +2153,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63836" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49357" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

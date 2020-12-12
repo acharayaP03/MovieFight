@@ -2,8 +2,7 @@ import axios from "axios";
 import { onMovieSelect } from "./domView";
 import createAutoComplete from "./autocomplete";
 
-createAutoComplete({
-  root: document.querySelector(".autocomplete"),
+const autocompleteConfig = {
   renderOptions(movie) {
     return `
         <img src="${movie.Poster === "N/A" ? "" : movie.Poster}" />
@@ -12,9 +11,6 @@ createAutoComplete({
   },
   inputValue(item) {
     return item.Title;
-  },
-  onSelectOption(item) {
-    return onMovieSelect(item);
   },
   async fetchMovie(searchTerm) {
     const response = await axios.get("http://www.omdbapi.com/", {
@@ -28,4 +24,20 @@ createAutoComplete({
     }
     return response.data.Search;
   },
+};
+createAutoComplete({
+  ...autocompleteConfig,
+  onSelectOption(item) {
+    document.querySelector(".tutorial").classList.add("is-hidden");
+    return onMovieSelect(item, document.querySelector("#left-summary"));
+  },
+  root: document.querySelector("#left-autocomplete"),
+});
+createAutoComplete({
+  ...autocompleteConfig,
+  onSelectOption(item) {
+    document.querySelector(".tutorial").classList.add("is-hidden");
+    return onMovieSelect(item, document.querySelector("#right-summary"));
+  },
+  root: document.querySelector("#right-autocomplete"),
 });
