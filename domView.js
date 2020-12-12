@@ -1,6 +1,6 @@
 import Axios from "axios";
 
-export const onMovieSelect = async (movie) => {
+export const onMovieSelect = async (movie, element) => {
   const response = await Axios.get("http://www.omdbapi.com/", {
     params: {
       apiKey: "4fd8b060",
@@ -9,7 +9,7 @@ export const onMovieSelect = async (movie) => {
   });
 
   console.log(response.data);
-  document.querySelector("#target").innerHTML = movieTemplate(response.data);
+  element.innerHTML = movieTemplate(response.data);
 };
 
 const movieTemplate = (movieDetail) => {

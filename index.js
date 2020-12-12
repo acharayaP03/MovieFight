@@ -12,9 +12,6 @@ const autocompleteConfig = {
   inputValue(item) {
     return item.Title;
   },
-  onSelectOption(item) {
-    return onMovieSelect(item);
-  },
   async fetchMovie(searchTerm) {
     const response = await axios.get("http://www.omdbapi.com/", {
       params: {
@@ -30,9 +27,17 @@ const autocompleteConfig = {
 };
 createAutoComplete({
   ...autocompleteConfig,
+  onSelectOption(item) {
+    document.querySelector(".tutorial").classList.add("is-hidden");
+    return onMovieSelect(item, document.querySelector("#left-summary"));
+  },
   root: document.querySelector("#left-autocomplete"),
 });
 createAutoComplete({
   ...autocompleteConfig,
+  onSelectOption(item) {
+    document.querySelector(".tutorial").classList.add("is-hidden");
+    return onMovieSelect(item, document.querySelector("#right-summary"));
+  },
   root: document.querySelector("#right-autocomplete"),
 });

@@ -1919,7 +1919,7 @@ var _axios = _interopRequireDefault(require("axios"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-const onMovieSelect = async movie => {
+const onMovieSelect = async (movie, element) => {
   const response = await _axios.default.get("http://www.omdbapi.com/", {
     params: {
       apiKey: "4fd8b060",
@@ -1927,7 +1927,7 @@ const onMovieSelect = async movie => {
     }
   });
   console.log(response.data);
-  document.querySelector("#target").innerHTML = movieTemplate(response.data);
+  element.innerHTML = movieTemplate(response.data);
 };
 
 exports.onMovieSelect = onMovieSelect;
@@ -2091,10 +2091,6 @@ const autocompleteConfig = {
     return item.Title;
   },
 
-  onSelectOption(item) {
-    return (0, _domView.onMovieSelect)(item);
-  },
-
   async fetchMovie(searchTerm) {
     const response = await _axios.default.get("http://www.omdbapi.com/", {
       params: {
@@ -2112,9 +2108,21 @@ const autocompleteConfig = {
 
 };
 (0, _autocomplete.default)({ ...autocompleteConfig,
+
+  onSelectOption(item) {
+    document.querySelector(".tutorial").classList.add("is-hidden");
+    return (0, _domView.onMovieSelect)(item, document.querySelector('#left-summary'));
+  },
+
   root: document.querySelector("#left-autocomplete")
 });
 (0, _autocomplete.default)({ ...autocompleteConfig,
+
+  onSelectOption(item) {
+    document.querySelector(".tutorial").classList.add("is-hidden");
+    return (0, _domView.onMovieSelect)(item, document.querySelector("#right-summary"));
+  },
+
   root: document.querySelector("#right-autocomplete")
 });
 },{"axios":"node_modules/axios/index.js","./domView":"domView.js","./autocomplete":"autocomplete.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
