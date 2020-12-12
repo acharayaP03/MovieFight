@@ -2042,7 +2042,8 @@ var _domView = require("./domView");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 const createAutoComplete = ({
-  root
+  root,
+  renderOptions
 }) => {
   root.innerHTML = `
         <label><b>Search For A Movie </b></label>
@@ -2074,10 +2075,7 @@ const createAutoComplete = ({
     for (let movie of movies) {
       const options = document.createElement("a");
       options.classList.add("dropdown-item");
-      options.innerHTML = `
-            <img src="${movie.Poster === "N/A" ? "" : movie.Poster}" />
-            ${movie.Title}
-        `;
+      options.innerHTML = renderOptions(movie);
       options.addEventListener("click", () => {
         dropdown.classList.remove("is-active");
         input.value = movie.Title;
@@ -2110,7 +2108,15 @@ var _autocomplete = _interopRequireDefault(require("./autocomplete"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 (0, _autocomplete.default)({
-  root: document.querySelector(".autocomplete")
+  root: document.querySelector(".autocomplete"),
+
+  renderOptions(movie) {
+    return `
+        <img src="${movie.Poster === "N/A" ? "" : movie.Poster}" />
+        ${movie.Title} (${movie.Year})
+    `;
+  }
+
 });
 },{"./autocomplete":"autocomplete.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];

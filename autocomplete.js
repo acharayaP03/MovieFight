@@ -3,7 +3,7 @@ import { debounce } from "./Utils/utils";
 
 import { onMovieSelect } from "./domView";
 
-const createAutoComplete = ({ root }) => {
+const createAutoComplete = ({ root, renderOptions }) => {
   root.innerHTML = `
         <label><b>Search For A Movie </b></label>
         <input class="input" />
@@ -36,10 +36,7 @@ const createAutoComplete = ({ root }) => {
 
       options.classList.add("dropdown-item");
 
-      options.innerHTML = `
-            <img src="${movie.Poster === "N/A" ? "" : movie.Poster}" />
-            ${movie.Title}
-        `;
+      options.innerHTML = renderOptions(movie);
 
       options.addEventListener("click", () => {
         dropdown.classList.remove("is-active");
