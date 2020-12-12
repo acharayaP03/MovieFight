@@ -2079,9 +2079,7 @@ var _autocomplete = _interopRequireDefault(require("./autocomplete"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-(0, _autocomplete.default)({
-  root: document.querySelector(".autocomplete"),
-
+const autocompleteConfig = {
   renderOptions(movie) {
     return `
         <img src="${movie.Poster === "N/A" ? "" : movie.Poster}" />
@@ -2112,6 +2110,12 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
     return response.data.Search;
   }
 
+};
+(0, _autocomplete.default)({ ...autocompleteConfig,
+  root: document.querySelector("#left-autocomplete")
+});
+(0, _autocomplete.default)({ ...autocompleteConfig,
+  root: document.querySelector("#right-autocomplete")
 });
 },{"axios":"node_modules/axios/index.js","./domView":"domView.js","./autocomplete":"autocomplete.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
@@ -2141,7 +2145,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63836" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49357" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -2,8 +2,7 @@ import axios from "axios";
 import { onMovieSelect } from "./domView";
 import createAutoComplete from "./autocomplete";
 
-createAutoComplete({
-  root: document.querySelector(".autocomplete"),
+const autocompleteConfig = {
   renderOptions(movie) {
     return `
         <img src="${movie.Poster === "N/A" ? "" : movie.Poster}" />
@@ -28,4 +27,12 @@ createAutoComplete({
     }
     return response.data.Search;
   },
+};
+createAutoComplete({
+  ...autocompleteConfig,
+  root: document.querySelector("#left-autocomplete"),
+});
+createAutoComplete({
+  ...autocompleteConfig,
+  root: document.querySelector("#right-autocomplete"),
 });
