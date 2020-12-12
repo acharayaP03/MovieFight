@@ -1964,83 +1964,30 @@ const debounce = (func, delay = 1000) => {
 };
 
 exports.debounce = debounce;
-},{}],"index.js":[function(require,module,exports) {
+},{}],"domView.js":[function(require,module,exports) {
 "use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.onMovieSelect = void 0;
 
 var _axios = _interopRequireDefault(require("axios"));
 
-var _fetchAPI = _interopRequireDefault(require("./API/fetchAPI"));
-
-var _utils = require("./Utils/utils");
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-const root = document.querySelector('.autocomplete');
-root.innerHTML = `
-    <label><b>Search For A Movie </b></label>
-    <input class="input" />
-    <div class="dropdown">
-        <div class="dropdown-menu">
-            <div class="dropdown-content results">
-            </div>
-        </div>
-    </div>
-`;
-const input = document.querySelector('input');
-const dropdown = document.querySelector('.dropdown');
-const resultsWrapper = document.querySelector('.results');
-
-const onInput = async event => {
-  const movies = await (0, _fetchAPI.default)(event.target.value); //if there is no results, dont add is-acitve at all.
-  // and retrurn, which will exit the execution of rest of the function.
-
-  if (!movies.length) {
-    dropdown.classList.remove('is-active');
-    return;
-  } //this will clear out the html elements below when another search is performed.
-
-
-  resultsWrapper.innerHTML = '';
-  dropdown.classList.add('is-active');
-
-  for (let movie of movies) {
-    const options = document.createElement('a');
-    options.classList.add('dropdown-item');
-    options.innerHTML = `
-            <img src="${movie.Poster === 'N/A' ? '' : movie.Poster}" />
-            ${movie.Title}
-        `;
-    options.addEventListener('click', () => {
-      dropdown.classList.remove('is-active');
-      input.value = movie.Title;
-      onMovieSelect(movie);
-    });
-    resultsWrapper.appendChild(options);
-  }
-};
-
-input.addEventListener("input", (0, _utils.debounce)(onInput, 500)); // close drop down menu if the click is outside.
-
-document.addEventListener('click', event => {
-  //root is where the dropdwon will be rendered. 
-  //event.target will have all the reference of the element when cliked. 
-  //removing is-acitve will remove the element. 
-  //console.log(event.target)
-  if (!root.contains(event.target)) {
-    dropdown.classList.remove('is-active');
-  }
-});
-
 const onMovieSelect = async movie => {
-  const response = await _axios.default.get('http://www.omdbapi.com/', {
+  const response = await _axios.default.get("http://www.omdbapi.com/", {
     params: {
-      apiKey: '4fd8b060',
+      apiKey: "4fd8b060",
       i: movie.imdbID
     }
   });
   console.log(response.data);
-  document.querySelector('#target').innerHTML = movieTemplate(response.data);
+  document.querySelector("#target").innerHTML = movieTemplate(response.data);
 };
+
+exports.onMovieSelect = onMovieSelect;
 
 const movieTemplate = movieDetail => {
   return `
@@ -2078,7 +2025,94 @@ const movieTemplate = movieDetail => {
         </article>
     `;
 };
-},{"axios":"node_modules/axios/index.js","./API/fetchAPI":"API/fetchAPI.js","./Utils/utils":"Utils/utils.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"axios":"node_modules/axios/index.js"}],"autocomplete.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _fetchAPI = _interopRequireDefault(require("./API/fetchAPI"));
+
+var _utils = require("./Utils/utils");
+
+var _domView = require("./domView");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+const createAutoComplete = ({
+  root
+}) => {
+  root.innerHTML = `
+        <label><b>Search For A Movie </b></label>
+        <input class="input" />
+        <div class="dropdown">
+            <div class="dropdown-menu">
+                <div class="dropdown-content results">
+                </div>
+            </div>
+        </div>
+    `;
+  const input = root.querySelector("input");
+  const dropdown = root.querySelector(".dropdown");
+  const resultsWrapper = root.querySelector(".results");
+
+  const onInput = async event => {
+    const movies = await (0, _fetchAPI.default)(event.target.value); //if there is no results, dont add is-acitve at all.
+    // and retrurn, which will exit the execution of rest of the function.
+
+    if (!movies.length) {
+      dropdown.classList.remove("is-active");
+      return;
+    } //this will clear out the html elements below when another search is performed.
+
+
+    resultsWrapper.innerHTML = "";
+    dropdown.classList.add("is-active");
+
+    for (let movie of movies) {
+      const options = document.createElement("a");
+      options.classList.add("dropdown-item");
+      options.innerHTML = `
+            <img src="${movie.Poster === "N/A" ? "" : movie.Poster}" />
+            ${movie.Title}
+        `;
+      options.addEventListener("click", () => {
+        dropdown.classList.remove("is-active");
+        input.value = movie.Title;
+        (0, _domView.onMovieSelect)(movie);
+      });
+      resultsWrapper.appendChild(options);
+    }
+  };
+
+  input.addEventListener("input", (0, _utils.debounce)(onInput, 500)); // close drop down menu if the click is outside.
+
+  document.addEventListener("click", event => {
+    //root is where the dropdwon will be rendered.
+    //event.target will have all the reference of the element when cliked.
+    //removing is-acitve will remove the element.
+    //console.log(event.target)
+    if (!root.contains(event.target)) {
+      dropdown.classList.remove("is-active");
+    }
+  });
+};
+
+var _default = createAutoComplete;
+exports.default = _default;
+},{"./API/fetchAPI":"API/fetchAPI.js","./Utils/utils":"Utils/utils.js","./domView":"domView.js"}],"index.js":[function(require,module,exports) {
+"use strict";
+
+var _autocomplete = _interopRequireDefault(require("./autocomplete"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+(0, _autocomplete.default)({
+  root: document.querySelector(".autocomplete")
+});
+},{"./autocomplete":"autocomplete.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -2106,7 +2140,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63686" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63836" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
