@@ -1952,7 +1952,7 @@ const runComparison = () => {
 
 const movieTemplate = movieDetail => {
   // here we will extract all the statistic and parse it to appropriete value
-  const dollars = parseInt(movieDetail.BoxOffice.replace(/\$/g, "").replace(/,/g, ""));
+  //const dollars = parseInt(movieDetail.BoxOffice.replace(/\$/g, "").replace(/,/g, ""));
   const metascore = parseInt(movieDetail.Metascore); // since ratings is on float string
 
   const imdbRating = parseFloat(movieDetail.imdbRating);
@@ -1983,7 +1983,7 @@ const movieTemplate = movieDetail => {
                 </div>
             </div>
         </article>
-        <article class="notification is-primary">
+        <article  data-value= ${awards} class="notification is-primary">
             <p class="title">${movieDetail.Awards}</p>
             <p class="subtitle">Awards</p>
         </article>
@@ -1991,15 +1991,15 @@ const movieTemplate = movieDetail => {
             <p class="title">${movieDetail.BoxOffice}</p>
             <p class="subtitle">Box Office</p>
         </article>
-        <article class="notification is-primary">
+        <article  data-value= ${metascore} class="notification is-primary">
             <p class="title">${movieDetail.Metascore}</p>
             <p class="subtitle">Metascore</p>
         </article>
-        <article class="notification is-primary">
+        <article  data-value=${imdbRating} class="notification is-primary">
             <p class="title">${movieDetail.imdbRating}</p>
             <p class="subtitle">IMDB Ratings</p>
         </article>
-        <article class="notification is-primary">
+        <article  data-value= ${imdbVotes} class="notification is-primary">
             <p class="title">${movieDetail.imdbVotes}</p>
             <p class="subtitle">IMDB Votes</p>
         </article>
