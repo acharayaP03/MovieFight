@@ -1951,6 +1951,25 @@ const runComparison = () => {
 };
 
 const movieTemplate = movieDetail => {
+  // here we will extract all the statistic and parse it to appropriete value
+  const dollars = parseInt(movieDetail.BoxOffice.replace(/\$/g, "").replace(/,/g, ""));
+  const metascore = parseInt(movieDetail.Metascore); // since ratings is on float string
+
+  const imdbRating = parseFloat(movieDetail.imdbRating);
+  const imdbVotes = parseInt(movieDetail.imdbVotes.replace(/,/g, "")); // since the Awards and nomination is a long string, we wil split it to an array and only work with the actule value.
+
+  let count = 0;
+  const awards = movieDetail.Awards.split(" ").reduce((prev, word) => {
+    const value = parseInt(word); //award string contains a words, when parsing word to int, will give us NaN.
+
+    if (isNaN(value)) {
+      //skip if nan occurs else add to the running total.
+      return prev;
+    } else {
+      return prev + value;
+    }
+  }, 0);
+  console.log(awards);
   return `
         <article class="media">
             <figure class="media-left">
@@ -2171,7 +2190,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50079" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50867" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
