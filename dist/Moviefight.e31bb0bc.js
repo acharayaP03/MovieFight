@@ -1928,8 +1928,8 @@ const onMovieSelect = async (movie, element, side) => {
       apiKey: "4fd8b060",
       i: movie.imdbID
     }
-  });
-  console.log(response.data);
+  }); // console.log(response.data);
+
   element.innerHTML = movieTemplate(response.data); // compare if both sides are defined
 
   if (side === "left") {
@@ -1947,10 +1947,43 @@ const onMovieSelect = async (movie, element, side) => {
 exports.onMovieSelect = onMovieSelect;
 
 const runComparison = () => {
-  console.log("Time for comparison.");
+  const leftSideStats = document.querySelectorAll("#left-summary .notification");
+  const rightSideStats = document.querySelectorAll("#right-summary .notification");
+  leftSideStats.forEach((leftSide, index) => {
+    const rightStat = rightSideStats[index]; //console.log(leftSide, rightStat);
+
+    const leftSideValue = parseInt(leftSide.dataset.value);
+    const rightSideValue = parseInt(rightStat.dataset.value);
+
+    if (rightSideValue > leftSideValue) {
+      leftSide.classList.remove("is-primary");
+      leftSide.classList.add("is-warning");
+    } else {
+      rightStat.classList.remove("is-primary");
+      rightStat.classList.add("is-warning");
+    }
+  });
 };
 
 const movieTemplate = movieDetail => {
+  // here we will extract all the statistic and parse it to appropriete value
+  //const dollars = parseInt(movieDetail.BoxOffice.replace(/\$/g, "").replace(/,/g, ""));
+  const metascore = parseInt(movieDetail.Metascore); // since ratings is on float string
+
+  const imdbRating = parseFloat(movieDetail.imdbRating);
+  const imdbVotes = parseInt(movieDetail.imdbVotes.replace(/,/g, "")); // since the Awards and nomination is a long string, we wil split it to an array and only work with the actule value.
+
+  let count = 0;
+  const awards = movieDetail.Awards.split(" ").reduce((prev, word) => {
+    const value = parseInt(word); //award string contains a words, when parsing word to int, will give us NaN.
+
+    if (isNaN(value)) {
+      //skip if nan occurs else add to the running total.
+      return prev;
+    } else {
+      return prev + value;
+    }
+  }, 0);
   return `
         <article class="media">
             <figure class="media-left">
@@ -1964,7 +1997,7 @@ const movieTemplate = movieDetail => {
                 </div>
             </div>
         </article>
-        <article class="notification is-primary">
+        <article  data-value= ${awards} class="notification is-primary">
             <p class="title">${movieDetail.Awards}</p>
             <p class="subtitle">Awards</p>
         </article>
@@ -1972,15 +2005,15 @@ const movieTemplate = movieDetail => {
             <p class="title">${movieDetail.BoxOffice}</p>
             <p class="subtitle">Box Office</p>
         </article>
-        <article class="notification is-primary">
+        <article  data-value= ${metascore} class="notification is-primary">
             <p class="title">${movieDetail.Metascore}</p>
             <p class="subtitle">Metascore</p>
         </article>
-        <article class="notification is-primary">
+        <article  data-value=${imdbRating} class="notification is-primary">
             <p class="title">${movieDetail.imdbRating}</p>
             <p class="subtitle">IMDB Ratings</p>
         </article>
-        <article class="notification is-primary">
+        <article  data-value= ${imdbVotes} class="notification is-primary">
             <p class="title">${movieDetail.imdbVotes}</p>
             <p class="subtitle">IMDB Votes</p>
         </article>
@@ -2171,7 +2204,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50079" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50867" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
