@@ -1928,8 +1928,8 @@ const onMovieSelect = async (movie, element, side) => {
       apiKey: "4fd8b060",
       i: movie.imdbID
     }
-  });
-  console.log(response.data);
+  }); // console.log(response.data);
+
   element.innerHTML = movieTemplate(response.data); // compare if both sides are defined
 
   if (side === "left") {
@@ -1947,7 +1947,22 @@ const onMovieSelect = async (movie, element, side) => {
 exports.onMovieSelect = onMovieSelect;
 
 const runComparison = () => {
-  console.log("Time for comparison.");
+  const leftSideStats = document.querySelectorAll("#left-summary .notification");
+  const rightSideStats = document.querySelectorAll("#right-summary .notification");
+  leftSideStats.forEach((leftSide, index) => {
+    const rightStat = rightSideStats[index]; //console.log(leftSide, rightStat);
+
+    const leftSideValue = parseInt(leftSide.dataset.value);
+    const rightSideValue = parseInt(rightStat.dataset.value);
+
+    if (rightSideValue > leftSideValue) {
+      leftSide.classList.remove("is-primary");
+      leftSide.classList.add("is-warning");
+    } else {
+      rightStat.classList.remove("is-primary");
+      rightStat.classList.add("is-warning");
+    }
+  });
 };
 
 const movieTemplate = movieDetail => {
@@ -1969,7 +1984,6 @@ const movieTemplate = movieDetail => {
       return prev + value;
     }
   }, 0);
-  console.log(awards);
   return `
         <article class="media">
             <figure class="media-left">
