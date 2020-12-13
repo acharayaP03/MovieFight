@@ -29,7 +29,7 @@ createAutoComplete({
   ...autocompleteConfig,
   onSelectOption(item) {
     document.querySelector(".tutorial").classList.add("is-hidden");
-    return onMovieSelect(item, document.querySelector("#left-summary"));
+    return onMovieSelect(item, document.querySelector("#left-summary"), "left");
   },
   root: document.querySelector("#left-autocomplete"),
 });
@@ -37,7 +37,7 @@ createAutoComplete({
   ...autocompleteConfig,
   onSelectOption(item) {
     document.querySelector(".tutorial").classList.add("is-hidden");
-    return onMovieSelect(item, document.querySelector("#right-summary"));
+    return onMovieSelect(item, document.querySelector("#right-summary"), "right");
   },
   root: document.querySelector("#right-autocomplete"),
 });

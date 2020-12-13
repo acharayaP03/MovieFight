@@ -1919,7 +1919,10 @@ var _axios = _interopRequireDefault(require("axios"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-const onMovieSelect = async (movie, element) => {
+let leftMovie;
+let rightMovie;
+
+const onMovieSelect = async (movie, element, side) => {
   const response = await _axios.default.get("http://www.omdbapi.com/", {
     params: {
       apiKey: "4fd8b060",
@@ -1927,10 +1930,25 @@ const onMovieSelect = async (movie, element) => {
     }
   });
   console.log(response.data);
-  element.innerHTML = movieTemplate(response.data);
-};
+  element.innerHTML = movieTemplate(response.data); // compare if both sides are defined
+
+  if (side === "left") {
+    leftMovie = response.data;
+  } else {
+    rightMovie = response.data;
+  }
+
+  if (leftMovie && rightMovie) {
+    runComparison();
+  }
+}; // now define a helper function for runComparison
+
 
 exports.onMovieSelect = onMovieSelect;
+
+const runComparison = () => {
+  console.log("Time for comparison.");
+};
 
 const movieTemplate = movieDetail => {
   return `
@@ -2111,7 +2129,7 @@ const autocompleteConfig = {
 
   onSelectOption(item) {
     document.querySelector(".tutorial").classList.add("is-hidden");
-    return (0, _domView.onMovieSelect)(item, document.querySelector('#left-summary'));
+    return (0, _domView.onMovieSelect)(item, document.querySelector("#left-summary"), "left");
   },
 
   root: document.querySelector("#left-autocomplete")
@@ -2120,7 +2138,7 @@ const autocompleteConfig = {
 
   onSelectOption(item) {
     document.querySelector(".tutorial").classList.add("is-hidden");
-    return (0, _domView.onMovieSelect)(item, document.querySelector("#right-summary"));
+    return (0, _domView.onMovieSelect)(item, document.querySelector("#right-summary"), "right");
   },
 
   root: document.querySelector("#right-autocomplete")
@@ -2153,7 +2171,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49357" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50079" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
