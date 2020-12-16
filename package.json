@@ -4,7 +4,8 @@
   "description": "js practice with api ",
   "main": "index.js",
   "scripts": {
-      "start": "parcel serve index.html --no-cache"
+      "start": "parcel serve index.html --no-cache",
+      "build": " parcel build index.js"
   },
   "keywords": [
     "compare",
